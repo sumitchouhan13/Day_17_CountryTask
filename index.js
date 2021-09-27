@@ -14,35 +14,6 @@
 //     console.log(err);
 //   });
 
-// function tempFun(lat, lng) {
-//   fetch(
-//     "https://api.openweathermap.org/data/2.5/find?lat=" +
-//       lat +
-//       "&lon=" +
-//       lng +
-//       "&cnt=1&appid=2b69e66a23fbc2452f128704ca9193a8"
-//   )
-//     .then(function (jsonData) {
-//       return jsonData.json();
-//     })
-//     .then(function (res) {
-//       // temperature = res.list[0].main.temp;
-//       // console.log(temperature);
-//       setTimeout(function () {
-//         temperature = res.list[0].main.temp;
-//         console.log(temperature);
-//       }, 2000);
-//     })
-//     .catch(function (err) {
-//       console.log(err);
-//     });
-// }
-
-function getRandomArbitrary(min, max) {
-  var randomnum = (Math.random() * (200.0 - 1.0 + 1.0) + 1.0).toFixed(2);
-  return randomnum;
-}
-
 fetch("https://restcountries.com/v3/all")
   .then(function (jsondata) {
     return jsondata.json();
@@ -99,7 +70,33 @@ fetch("https://restcountries.com/v3/all")
         weather.setAttribute("id", buttonId);
         var lat = obj.latlng[0];
         var lng = obj.latlng[1];
-        let temperature = 0;
+        var modal = document.createElement("div");
+        modal.setAttribute("class", "modal fade");
+        modal.setAttribute("id", obj.name.common);
+        modal.setAttribute("data-bs-backdrop", "static");
+        modal.setAttribute("data-bs-keyboard", "false");
+        modal.setAttribute("tabindex", "-1");
+        modal.setAttribute("aria-labelledby", "staticBackdropLabel");
+        modal.setAttribute("aria-hidden", "true");
+        var modalDialog = document.createElement("div");
+        modalDialog.setAttribute("class", "modal-dialog");
+        var modalContent = document.createElement("div");
+        modalContent.setAttribute("class", "modal-content");
+        var modalHeader = document.createElement("div");
+        modalHeader.setAttribute("class", "modal-header");
+        var modalTitle = document.createElement("h5");
+        modalTitle.setAttribute("class", "modal-title");
+        modalTitle.setAttribute("id", obj.altSpellings[1]);
+        var modalClose = document.createElement("button");
+        modalClose.setAttribute("class", "btn-close");
+        modalClose.setAttribute("data-bs-dismiss", "modal");
+        modalClose.setAttribute("aria-label", "Close");
+        var modalBody = document.createElement("div");
+        modalBody.setAttribute("class", "modal-body");
+        modalHeader.append(modalTitle, modalClose);
+        modalContent.append(modalHeader, modalBody);
+        modalDialog.appendChild(modalContent);
+        modal.appendChild(modalDialog);
         weather.onclick = function () {
           fetch(
             "https://api.openweathermap.org/data/2.5/find?lat=" +
@@ -112,7 +109,11 @@ fetch("https://restcountries.com/v3/all")
               return jsonData.json();
             })
             .then(function (res) {
-              temperature = res.list[0].main.temp;
+              var temperature = res.list[0].main.temp;
+              var name = document.getElementById(obj.altSpellings[1]);
+              name.innerHTML =
+                "<div>Current Temperature is</div>" + temperature + " F";
+              console.log(temperature);
             })
             .catch(function (err) {
               console.log(err);
@@ -136,38 +137,6 @@ fetch("https://restcountries.com/v3/all")
           countryCode,
           buttondiv
         );
-        var modal = document.createElement("div");
-        modal.setAttribute("class", "modal fade");
-        modal.setAttribute("id", obj.name.common);
-        modal.setAttribute("data-bs-backdrop", "static");
-        modal.setAttribute("data-bs-keyboard", "false");
-        modal.setAttribute("tabindex", "-1");
-        modal.setAttribute("aria-labelledby", "staticBackdropLabel");
-        modal.setAttribute("aria-hidden", "true");
-        var modalDialog = document.createElement("div");
-        modalDialog.setAttribute("class", "modal-dialog");
-        var modalContent = document.createElement("div");
-        modalContent.setAttribute("class", "modal-content");
-        var modalHeader = document.createElement("div");
-        modalHeader.setAttribute("class", "modal-header");
-        var modalTitle = document.createElement("h5");
-        modalTitle.setAttribute("class", "modal-title");
-        modalTitle.setAttribute("id", "staticBackdropLabel");
-        modalTitle.innerHTML =
-          "<b>Current Temperature of</b> " +
-          obj.name.common +
-          "<b> is </b>" +
-          getRandomArbitrary(201, 319) + " F";
-        var modalClose = document.createElement("button");
-        modalClose.setAttribute("class", "btn-close");
-        modalClose.setAttribute("data-bs-dismiss", "modal");
-        modalClose.setAttribute("aria-label", "Close");
-        var modalBody = document.createElement("div");
-        modalBody.setAttribute("class", "modal-body");
-        modalHeader.append(modalTitle, modalClose);
-        modalContent.append(modalHeader, modalBody);
-        modalDialog.appendChild(modalContent);
-        modal.appendChild(modalDialog);
         card.appendChild(cardBody);
         box.appendChild(card);
         container.appendChild(box);

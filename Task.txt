@@ -1,9 +1,0 @@
-Create a Webpage for displaying country data with weather info.
-
-Steps :-
-1.Design
-2.API	
-3.Functionality
-
-What I will use :-
-Bootstrap = Toast , cards
